@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electricity Bill Splitter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://cdn-icons-png.flaticon.com/512/1809/1809315.png') no-repeat center center fixed, linear-gradient(135deg, #74ebd5, #ACB6E5);
+      background-size: 150px, cover;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffffd9;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #5a67d8;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #434190;
+    }
+    .result {
+      margin-top: 20px;
+      background: #e6fffa;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid #38b2ac;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💡 Electricity Bill Splitter</h1>
+    <label>Total Amount (₹):</label>
+    <input type="number" id="balance" placeholder="Enter total amount">
+
+    <label>Total Units Consumed:</label>
+    <input type="number" id="total_units" placeholder="Enter total units">
+
+    <label>Total Number of Users:</label>
+    <input type="number" id="users" placeholder="Enter number of users" oninput="generateInputs()">
+
+    <div id="userInputs"></div>
+    <button onclick="calculateBills()">💰 Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function generateInputs() {
+      const users = parseInt(document.getElementById('users').value);
+      const container = document.getElementById('userInputs');
+      container.innerHTML = '';
+      for (let i = 1; i <= users; i++) {
+        container.innerHTML += `<label>Units consumed by User ${i}:</label><input type="number" id="user_${i}" placeholder="Enter units">`;
+      }
+    }
+
+    function calculateBills() {
+      const balance = parseFloat(document.getElementById('balance').value);
+      const total_units = parseFloat(document.getElementById('total_units').value);
+      const users = parseInt(document.getElementById('users').value);
+      const user_units = [];
+      let total = 0;
+
+      for (let i = 1; i <= users; i++) {
+        const units = parseFloat(document.getElementById(`user_${i}`).value);
+        user_units.push(units);
+        total += units;
+      }
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (total === total_units) {
+        for (let i = 0; i < users; i++) {
+          const amount = (user_units[i] / total_units) * balance;
+          resultDiv.innerHTML += `<p>💳 Amount to be paid by User ${i + 1} is ₹${amount.toFixed(2)}</p>`;
+        }
+      } else {
+        resultDiv.innerHTML = '<p class="error">❌ Invalid data! Total of user units does not match the entered total units.</p>';
+      }
+    }
+  </script>
+</body>
+</html>
